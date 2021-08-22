@@ -75,19 +75,10 @@ svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/pa
 svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl88x2bu
 
 # Add luci-app-smartdns & smartdns
-# svn co https://github.com/281677160/openwrt-package/trunk/feeds/luci/applications/luci-app-smartdns
-# svn co https://github.com/281677160/openwrt-package/trunk/feeds/packages/net/smartdns
-svn co https://github.com/OpenWrt-Actions/OpenWrt-Packages/trunk/smartdns
-svn co https://github.com/OpenWrt-Actions/OpenWrt-Packages/trunk/luci-app-smartdns
-
-# 动态DNS
-git clone --depth 1 https://github.com/small-5/ddns-scripts-dnspod package/lean/ddns-scripts_dnspod
-git clone --depth 1 https://github.com/small-5/ddns-scripts-aliyun package/lean/ddns-scripts_aliyun
-svn co https://github.com/openwrt/packages/branches/openwrt-18.06/net/ddns-scripts feeds/packages/net/ddns-scripts
-svn co https://github.com/openwrt/luci/branches/openwrt-18.06/applications/luci-app-ddns feeds/luci/applications/luci-app-ddns
-svn co https://github.com/QiuSimons/OpenWrt_luci-app/trunk/others/luci-app-tencentddns package/lean/luci-app-tencentddns
-svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-aliddns feeds/luci/applications/luci-app-aliddns
-ln -sf ../../../feeds/luci/applications/luci-app-aliddns ./package/feeds/luci/luci-app-aliddns
+svn co https://github.com/281677160/openwrt-package/trunk/feeds/luci/applications/luci-app-smartdns
+svn co https://github.com/281677160/openwrt-package/trunk/feeds/packages/net/smartdns
+# svn co https://github.com/OpenWrt-Actions/OpenWrt-Packages/trunk/smartdns
+# svn co https://github.com/OpenWrt-Actions/OpenWrt-Packages/trunk/luci-app-smartdns
 
 # Add apk (Apk Packages Manager)
 svn co https://github.com/openwrt/packages/trunk/utils/apk
@@ -100,6 +91,23 @@ svn co https://github.com/zcy85611/Openwrt-Package/trunk/udpspeeder-tunnel
 # Add OpenAppFilter
 git clone --depth=1 https://github.com/destan19/OpenAppFilter
 popd
+
+# Add cpufreq
+rm -rf package/lean/luci-app-cpufreq
+svn co https://github.com/immortalwrt/luci/trunk/applications/luci-app-cpufreq feeds/luci/applications/luci-app-cpufreq
+ln -sf ../../../feeds/luci/applications/luci-app-cpufreq ./package/feeds/luci/luci-app-cpufreq
+sed -i 's,1608,1800,g' feeds/luci/applications/luci-app-cpufreq/root/etc/uci-defaults/cpufreq
+sed -i 's,2016,2208,g' feeds/luci/applications/luci-app-cpufreq/root/etc/uci-defaults/cpufreq
+sed -i 's,1512,1608,g' feeds/luci/applications/luci-app-cpufreq/root/etc/uci-defaults/cpufreq
+
+# 动态DNS
+git clone --depth 1 https://github.com/small-5/ddns-scripts-dnspod package/lean/ddns-scripts_dnspod
+git clone --depth 1 https://github.com/small-5/ddns-scripts-aliyun package/lean/ddns-scripts_aliyun
+svn co https://github.com/openwrt/packages/branches/openwrt-18.06/net/ddns-scripts feeds/packages/net/ddns-scripts
+svn co https://github.com/openwrt/luci/branches/openwrt-18.06/applications/luci-app-ddns feeds/luci/applications/luci-app-ddns
+svn co https://github.com/QiuSimons/OpenWrt_luci-app/trunk/others/luci-app-tencentddns package/lean/luci-app-tencentddns
+svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-aliddns feeds/luci/applications/luci-app-aliddns
+ln -sf ../../../feeds/luci/applications/luci-app-aliddns ./package/feeds/luci/luci-app-aliddns
 
 # Add luci-app-ddnsto
 pushd package/network/services
@@ -161,13 +169,13 @@ sed -i 's/\/bin\/ash/\/usr\/bin\/zsh/g' package/base-files/files/etc/passwd
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generate
 sed -i '/uci commit system/i\uci set system.@system[0].hostname='FusionWrt'' package/lean/default-settings/files/zzz-default-settings
-sed -i "s/OpenWrt /DHDAXCW @ FusionWrt /g" package/lean/default-settings/files/zzz-default-settings
+sed -i "s/OpenWrt /DHDAXCW $(TZ=UTC-8 date "+%Y%m%d") @ FusionWrt /g" package/lean/default-settings/files/zzz-default-settings
 # find package/*/ feeds/*/ -maxdepth 6 -path "*luci-app-smartdns/luasrc/controller/smartdns.lua" | xargs -i sed -i 's/\"SmartDNS\")\, 4/\"SmartDNS\")\, 3/g' {} 
 # Test kernel 5.10
 # sed -i 's/5.4/5.10/g' target/linux/rockchip/Makefile
 
 # Custom configs
-git am $GITHUB_WORKSPACE/patches/lean/*.patch
+# git am $GITHUB_WORKSPACE/patches/lean/*.patch
 echo -e " DHDAXCW's FusionWrt built on "$(date +%Y.%m.%d)"\n -----------------------------------------------------" >> package/base-files/files/etc/banner
 
 # Add CUPInfo

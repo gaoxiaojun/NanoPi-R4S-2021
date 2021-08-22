@@ -11,8 +11,8 @@ name: NanoPi R4S stable FusionWRT
 on:
   repository_dispatch:
   workflow_dispatch:
-  #schedule:
-    #- cron: 0 17 * * *
+  schedule:
+    - cron: 0 17 * * *
   # watch:
   #   types: started
 
@@ -62,15 +62,7 @@ jobs:
         git config --global user.email "git@github.com"
         git config --global user.name "GitHub"
         git clone $REPO_URL -b $REPO_BRANCH openwrt
-        cd openwrt
-        rm -rf ./target/linux/rockchip
-        svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
-        rm -rf ./package/boot/uboot-rockchip
-        rm -rf ./package/boot/boot/arm-trusted-firmware-rk3328
-        svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
-        svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/arm-trusted-firmware-rk3328 package/boot/arm-trusted-firmware-rk3328
-        rm -rf ./package/kernel/mac80211
-        svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/kernel/mac80211 package/kernel/mac80211
+
     - name: Update Feeds
       id: update
       run: |
@@ -106,7 +98,6 @@ jobs:
         ../$DIY_SH
         ../scripts/preset-clash-core.sh armv8
         ../scripts/preset-terminal-tools.sh
-
     - name: Download Package
       id: package
       run: |
