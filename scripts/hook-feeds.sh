@@ -1,34 +1,37 @@
 #!/bin/bash
 #=================================================
 # File name: hook-feeds.sh
+# System Required: Linux
+# Version: 1.0
+# Lisence: MIT
 # Author: SuLingGG
 # Blog: https://mlapp.cn
 #=================================================
-
 # Svn checkout packages from immortalwrt's repository
 pushd customfeeds
+
+# Add luci-app-eqos
+svn co https://github.com/immortalwrt/luci/trunk/applications/luci-app-eqos luci/applications/luci-app-eqos
+
+# Add luci-proto-modemmanager
+svn co https://github.com/immortalwrt/luci/trunk/protocols/luci-proto-modemmanager luci/protocols/luci-proto-modemmanager
 
 # Add luci-app-gowebdav
 svn co https://github.com/immortalwrt/luci/trunk/applications/luci-app-gowebdav luci/applications/luci-app-gowebdav
 svn co https://github.com/immortalwrt/packages/trunk/net/gowebdav packages/net/gowebdav
 
-# Add luci-app-netdata
-rm -rf packages/admin/netdata
-svn co https://github.com/281677160/openwrt-package/trunk/feeds/packages/net/netdata packages/admin/netdata
-rm -rf ../package/lean/luci-app-netdata
-svn co https://github.com/281677160/openwrt-package/trunk/feeds/luci/applications/luci-app-netdata luci/applications/luci-app-netdata
-
 # Add tmate
 git clone --depth=1 https://github.com/immortalwrt/openwrt-tmate
-
-# Add luci-app-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall luci/applications/openwrt-passwall
 
 # Add gotop
 svn co https://github.com/immortalwrt/packages/branches/openwrt-18.06/admin/gotop packages/admin/gotop
 
 # Add minieap
 svn co https://github.com/immortalwrt/packages/trunk/net/minieap packages/net/minieap
+
+# Replace smartdns with the official version
+#rm -rf packages/net/smartdns
+#svn co https://github.com/openwrt/packages/trunk/net/smartdns packages/net/smartdns
 popd
 
 # Set to local feeds
